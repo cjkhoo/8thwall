@@ -1,0 +1,166 @@
+<!-- 
+THEME BUILDER SCENE
+Niantic-style map scene you can fully customize and share.
+Walk in the real world to different Wayspots to launch a procedural VPS experience.
+-->
+
+<a-scene
+  focused-wayspot
+  map-loading-screen
+  renderer="color-management:true; antialias: true"
+  fog="color: #ebebeb; type: exponential; density: 0.018;"
+  gltf-model="draco-decoder-path: https://cdn.8thwall.com/web/aframe/draco-decoder/">
+  <a-assets>
+    <a-asset-item id="doty-model" src=".././assets/map-assets/doty.glb"></a-asset-item>
+    <a-asset-item id="poi-model" src=".././assets/map-assets/poi-disc.glb"></a-asset-item>
+    <img id="clouds" src=".././assets/map-assets/clouds.jpg" />
+  </a-assets>
+
+  <!-- materials for custom map themes -->
+  <a-entity id="land-mat" material="color: #d6d6d6"></a-entity>
+  <a-entity id="building-mat" material="color: #c2c2c2; opacity: 0.9;"></a-entity>
+  <a-entity id="park-mat" material="color: #adadad"></a-entity>
+  <a-entity id="parking-mat" material="color: #707070"></a-entity>
+  <a-entity id="road-mat" material="color: #000000"></a-entity>
+  <a-entity id="transit-mat" material="color: #000000"></a-entity>
+  <a-entity id="sand-mat" material="color: #707070"></a-entity>
+  <a-entity id="water-mat" material="color: #858585"></a-entity>
+
+
+     <a-box id="pp"  custom-test position="0 1.5 -3" depth="1" height="1" width="1" color="red"></a-box>
+  <a-text id="displayText" 
+            value="This is a larger textbox" 
+            color="black" 
+            align="center" 
+            width="2.8"
+            position="0 0 0.01"
+            font="kelsonsans"
+            scale="1.5 1.5 1.5"></a-text>
+
+  <div id="gradient" class="gradient-move absolute-fill">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  <!-- <div id="divtest" style="position:absolute;z-index:999;top:0">
+   divtest
+  </div> -->
+  <img
+    id="poweredby"
+    src="https://cdn.8thwall.com/web/img/almostthere/v2/poweredby-horiz-white-4.svg" />
+
+  <div id="ui-section">
+    <h3 id="wayspot-title"></h3>
+    <span>
+      <img src=".././assets/theme-assets/walk-icon.svg" />
+      <p id="wayspot-distance"></p>
+      <button id="start-btn">Start AR</button>
+    </span>
+  </div>
+
+  <div id="feature-switcher">
+    <div>
+      <input id="feature-update" type="range" name="update" min="0" max="20" />
+    </div>
+    <div id="color-parent">
+      <input id="feature-show" type="checkbox" name="feature-show" checked />
+      <input id="color-input" type="color" name="color" value="#FFFFFF" />
+      <label id="color-label" for="color"></label>
+      <button id="code-btn"><img src=".././assets/theme-assets/code.svg" /></button>
+      <button id="share-btn"><img src=".././assets/theme-assets/link.svg" /></button>
+    </div>
+    <span>
+      <img id="prev-feature-btn" src=".././assets/theme-assets/arrow-left.svg" />
+      <h3 id="feature-title"></h3>
+      <img id="next-feature-btn" src=".././assets/theme-assets/arrow-right.svg" />
+    </span>
+  </div>
+
+  <a-entity
+    light="
+      type: directional;
+      intensity: 0.3;
+      cast-shadow: true;
+      shadow-map-height: 2048;
+      shadow-map-width: 2048;
+      shadow-camera-top: 15;
+      shadow-camera-bottom: -15;
+      shadow-camera-left: -15;
+      shadow-camera-right: 15;
+      shadow-radius: 4;
+      target: #character;"
+    position="0 10 0"
+    shadow>
+  </a-entity>
+
+  <a-light type="ambient" intensity="0.8"></a-light>
+
+  <a-camera
+    near="1"
+    far="200"
+    raycaster="objects: .cantap"
+    cursor="fuse: false; rayOrigin: mouse;"
+    wasd-controls="enabled: false"
+    lightship-map-controls="target: 0 3 0; min-distance: 5.5; max-distance: 25;">
+    
+  </a-camera>
+  
+
+  <a-sky
+    id="outer-sky"
+    radius="100"
+    material="
+      shader: lightship-map-sky-gradient; 
+      bottomColor: #ebebeb; 
+      topColor: #000000; 
+      exponent: 0.65"></a-sky>
+  <a-sky
+    id="inner-sky"
+    radius="90"
+    xrextras-spin="speed: 500000"
+    material="
+      shader: standard;
+      src: #clouds; 
+      transparent: true; 
+      repeat: 4 4;
+      opacity: 0.25;"></a-sky>
+
+  <a-plane
+    scale="100 100 1"
+    rotation="-90 0 0"
+    position="0 0.01 0"
+    material="shader: shadow"
+    shadow="cast: false; receive: true;"></a-plane>
+
+   <lightship-map
+    theme-builder
+    custom-test
+    scale="100 100 100"
+    land-material="#land-mat"
+    building-material="#building-mat"
+    park-material="#park-mat"
+    parking-material="#parking-mat"
+    road-material="#road-mat"
+    transit-material="#transit-mat"
+    sand-material="#sand-mat"
+    water-material="#water-mat"
+    lightship-map-add-wayspots="primitive: custom-wayspot; meters: 25; min: 0.05;">
+    <a-entity
+      id="character"
+      gltf-model="#doty-model"
+      rotation="0 180 0"
+      scale="0.1 0.1 0.1"
+      lightship-map-motion-direction
+      lightship-map-walk-animation="idle: idle; walk: walk; run: walk;"
+      shadow></a-entity>
+
+   
+    <lightship-map-point lat-lng="22.7540103 120.4447493" meters="5" min="0">
+       <a-box class="pp" position="0 1.5 -3" depth="1" height="1" width="1" color="red"></a-box>
+    </lightship-map-point>
+      <lightship-map-point lat-lng="22.75414 120.444617" meters="5" min="0">
+       <a-box class="pp" position="0 1.5 -3" depth="1" height="1" width="1" color="green"></a-box>
+    </lightship-map-point>
+  </lightship-map> 
+ 
+</a-scene>
